@@ -1,0 +1,75 @@
+{
+    "name": "aqua-max",
+    "version": "1.0.0",
+    "description": "Aqua Max backend",
+    "private": true,
+    "workspaces": [
+        "lambdas/*"
+    ],
+    "scripts": {
+        "lint": "eslint \"{lambdas,services,test}/**/*.ts\"",
+        "fix": "eslint \"{lambdas,services,test}/**/*.ts\" --fix",
+        "compile": "tsc",
+        "pretest": "npm run compile",
+        "posttest": "npm run lint",
+        "zip": "npm run zip-workspaces",
+        "win:zip": "npm run winzip-workspaces",
+        "clean": "find . -type d -name \"dist\" -not -path \"*/node_modules/*\" -exec rm -rf {} + && rm -rf terraform/.terraform",
+        "build": "npm run clean && node esbuild.mjs && npm run zip",
+        "win:build": "npm run clean && node esbuild.mjs && npm run win:zip",
+        "test": "vitest",
+        "test:i": "vitest --config=./vitest.integration.config.ts",
+        "test:fast": "vitest-pool-threads",
+        "test:report": "vitest run --globals --reporter=junit --outputFile=reports/test-report.xml",
+        "test:coverage": "vitest run --coverage",
+        "test:ui": "vitest --ui",
+        "prettier": "npx prettier --check .",
+        "format": "npx prettier --write .",
+        "plan": "bash utils/deploy.sh",
+        "deploy": "bash utils/deploy.sh",
+        "bd": "npm run build && bash utils/deploy.sh",
+        "win:bd": "npm run win:build && bash utils/deploy.sh",
+        "tflock": "cd terraform && terraform providers lock -platform=windows_amd64 -platform=darwin_amd64 -platform=linux_amd64",
+        "upackage": "npx npm-check-updates -u"
+    },
+    "devDependencies": {
+        "@aws-sdk/client-dynamodb": "^3.731.1",
+        "@aws-sdk/client-lambda": "^3.731.1",
+        "@aws-sdk/client-rds": "^3.731.1",
+        "@aws-sdk/client-secrets-manager": "^3.731.1",
+        "@aws-sdk/client-sfn": "^3.731.1",
+        "@aws-sdk/client-sqs": "^3.731.1",
+        "@aws-sdk/client-sso": "^3.731.1", 
+        "@aws-sdk/client-sts": "^3.731.1",
+        "@aws-sdk/credential-provider-node": "^3.731.1",
+        "@aws-sdk/credential-providers": "^3.731.1",
+        "@aws-sdk/middleware-signing": "^3.731.1", 
+        "@aws-sdk/rds-signer": "^3.731.1",
+        
+        "@types/aws-lambda": "^8.10.147",
+        "@types/ibm_db": "^3.2.0",
+        "@types/lodash": "^4.17.14",
+        "@types/node": "^22.10.7", 
+        "@types/pg": "^8.11.10",
+        "@types/xml2js": "^0.4.14",
+        
+        "@vitest/coverage-v8": "^3.0.3",
+        "@vitest/ui": "^3.0.3",
+        "vitest": "^3.0.3", 
+        
+        "@eslint/js": "^9.18.0",
+        "eslint": "^9.18.0",
+        "prettier": "^3.4.2", 
+        "typescript-eslint": "^8.21.0",
+        
+        "esbuild": "^0.24.2",
+        "ts-node": "^10.9.2",
+        "typescript": "~5.7.3", 
+        
+        "cross-env": "^7.0.3",
+        "husky": "^9.1.7",
+        "ibmmq": "^2.1.2",
+        "lodash": "^4.17.21",
+        "@smithy/types": "^4.1.0" 
+    }
+}
